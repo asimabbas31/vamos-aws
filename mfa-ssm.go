@@ -11,20 +11,27 @@ import (
 	"github.com/aws/aws-sdk-go/service/iam"
 	"github.com/aws/aws-sdk-go/service/ssm"
 	"github.com/aws/aws-sdk-go/service/sts"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 func getvalue() {
-	var access, secret, region string
-	fmt.Println("ENTER YOUR ACCESS KEY")
-	fmt.Scanln(&access)
-	fmt.Println("ENTER YOUR SECRET KEY")
-	fmt.Scanln(&secret)
+	var region string
+	fmt.Println("***ENTER YOUR ACCESS KEY***")
+	access, err := terminal.ReadPassword(0)
+	fmt.Println(access)
+	fmt.Println("***ENTER YOUR SECRET KEY***")
+	secret, err := terminal.ReadPassword(0)
+	fmt.Println(secret)
 	fmt.Println("ENTER YOUR REGION")
 	fmt.Scanln(&region)
-	os.Setenv("AWS_ACCESS_KEY", access)
-	os.Setenv("AWS_SECRET_ACCESS_KEY", secret)
+	os.Setenv("AWS_ACCESS_KEY", string(access))
+	os.Setenv("AWS_SECRET_ACCESS_KEY", string(secret))
 	os.Setenv("AWS_REGION", region)
 	os.Setenv("AWS_DEFAULT_OUTPUT", "json")
+
+	if err != nil {
+	}
+
 }
 
 func awssess() *session.Session {
@@ -43,7 +50,7 @@ func awssess() *session.Session {
 	}
 
 	svc := sts.New(sess)
-	fmt.Println("ENTER Token")
+	fmt.Println("##ENTER MFA Token")
 	fmt.Scanln(&mfaCode)
 
 	params := &sts.GetSessionTokenInput{
@@ -118,7 +125,7 @@ func main() {
 	getvalue()
 	sess = awssess()
 	var one string
-	fmt.Println("Enter 1, if you want only to see the parameters or 2 if you want to update / add new parameter ")
+	fmt.Println("###Enter 1, if you want only to see the parameters or 2 if you want to update/add new parameter###")
 	fmt.Scanln(&one)
 	if one == "2" {
 		putpara(sess)
