@@ -71,7 +71,7 @@ func awssess() *session.Session {
 
 func ssid(sess *session.Session) {
 	var envvar string
-	fmt.Println("Enter Required App Variables Name eg: /dev/mvp")
+	fmt.Println("Enter Required App Variables Name eg: /dev/app")
 	fmt.Scanln(&envvar)
 	ssmsvc := ssm.New(sess)
 
@@ -96,7 +96,7 @@ func ssid(sess *session.Session) {
 // To put the paramerter in parameter store.
 func putpara(sess *session.Session) {
 	var envname, envvalue, envtype string
-	fmt.Println("Supply the Name of the parameter eg: /dev/mvp")
+	fmt.Println("Supply the Name of the parameter eg: /dev/app")
 	fmt.Scanln(&envname)
 	fmt.Println("Supply the Value of the parameter")
 	fmt.Scanln(&envvalue)
