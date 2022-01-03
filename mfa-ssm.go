@@ -14,6 +14,7 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
+// To get the User input for Session
 func getvalue() {
 	var region string
 	fmt.Println("***ENTER YOUR ACCESS KEY***")
@@ -34,6 +35,7 @@ func getvalue() {
 
 }
 
+// Create a Session using input values and get the Session Token
 func awssess() *session.Session {
 	var mfaCode string
 	_iam := iam.New(session.New())
@@ -42,7 +44,6 @@ func awssess() *session.Session {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%1s\n", *sn)
 
 	sess, err := session.NewSession()
 	if err != nil {
@@ -62,16 +63,11 @@ func awssess() *session.Session {
 
 	fmt.Println(awsutil.StringValue(resp.Credentials.SessionToken))
 	os.Setenv("AWS_SESSION_TOKEN", awsutil.StringValue(resp.Credentials.SessionToken))
-	if err != nil {
-		// Print the error, cast err to awserr.Error to get the Code and
-		// Message from an error.
-		fmt.Println(err.Error())
-		return nil
-	}
 
 	return sess
-
 }
+
+// To Get the Paramaters and Values store in SSM Parameter Store
 
 func ssid(sess *session.Session) {
 	var envvar string
@@ -97,6 +93,7 @@ func ssid(sess *session.Session) {
 
 }
 
+// To put the paramerter in parameter store.
 func putpara(sess *session.Session) {
 	var envname, envvalue, envtype string
 	fmt.Println("Supply the Name of the parameter eg: /dev/mvp")
@@ -121,11 +118,12 @@ func putpara(sess *session.Session) {
 }
 
 func main() {
+	colorGreen := "\033[32m"
 	var sess *session.Session
 	getvalue()
 	sess = awssess()
 	var one string
-	fmt.Println("###Enter 1, if you want only to see the parameters or 2 if you want to update/add new parameter###")
+	fmt.Println(string(colorGreen), "Enter 1, if you want only to see the parameters or 2 if you want to update/add new parameter")
 	fmt.Scanln(&one)
 	if one == "2" {
 		putpara(sess)
